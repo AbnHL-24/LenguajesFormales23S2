@@ -100,10 +100,18 @@ class AnalizadorAFD {
             estado = Estados.S11
             tokenActual += char.toString()
             tipoDeToken = TipoToken.IDENTIFICADOR
+        } else if (char == '!') {
+            estado = Estados.S12
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.DIFERENTE
         } else if (char == '/') {
             estado = Estados.S16
             tokenActual += char.toString()
             tipoDeToken = TipoToken.DIVISION
+        } else if (char == '*') {
+            estado = Estados.S18
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.MULTIPLICACION
         }
     }
 
@@ -194,6 +202,10 @@ class AnalizadorAFD {
             estado = Estados.S11
             tokenActual += char.toString()
             //Sin cambios: tipoDeTokenIDENTIFICADOR
+        } else {
+            estado = Estados.S2
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.ERROR
         }
     }
 
@@ -220,7 +232,21 @@ class AnalizadorAFD {
             }
         }
     }
-    private fun estadoS12(char: Char) {}
+
+    /**
+     * Función correspondiente al estado S12, analiza la comparación 'diferente'
+     */
+    private fun estadoS12(char: Char) {
+        if (char == '=') {
+            estado = Estados.S2
+            tokenActual += char.toString()
+            //Sin cambios: tipoDeToken = DIFERENTE
+        } else {
+            estado = Estados.S2
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.ERROR
+        }
+    }
     private fun estadoS13(char: Char) {}
     private fun estadoS14(char: Char) {}
     private fun estadoS15(char: Char) {}
@@ -228,9 +254,39 @@ class AnalizadorAFD {
     /**
      * Funcion correspondiente al estado S16, analiza una barra de división.
      */
-    private fun estadoS16(char: Char) {}
+    private fun estadoS16(char: Char) {
+        if (char == '/') {
+            estado = Estados.S7
+            tokenActual += char.toString()
+            //Sin cambios: tipoDeToken = DIVISION
+        } else if (char == '=') {
+            estado = Estados.S2
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.DIVISION_Y_ASIGNACION
+        } else {
+            agregarToken() //Guardo el token y limpio (ahora es S1).
+            estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
+        }
+    }
     private fun estadoS17(char: Char) {}
-    private fun estadoS18(char: Char) {}
+
+    /**
+     * Función correspondiente al estado S18, analiza un símbolo de multiplicación
+     */
+    private fun estadoS18(char: Char) {
+        if (char == '*') {
+            estado = Estados.S7
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.EXPONENTE
+        } else if (char == '=') {
+            estado = Estados.S2
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.MULTIPLICACION_Y_ASIGNACION
+        } else {
+            agregarToken() //Guardo el token y limpio (ahora es S1).
+            estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
+        }
+    }
 
     /**
      * Restablece lo necesario para entrar nuevamente en el estado 1.

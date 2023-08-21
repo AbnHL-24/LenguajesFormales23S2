@@ -32,6 +32,8 @@ enum class TipoToken(private val tipo:String, private val categoria: CategoriaTo
     RESTA_Y_ASIGNACION("Resta y asignación", CategoriaToken.ASIGNACION),
     MULTIPLICACION_Y_ASIGNACION("Multiplicación y asignación", CategoriaToken.ASIGNACION),
     DIVISION_Y_ASIGNACION("División y asignación", CategoriaToken.ASIGNACION),
+    EXPONENTE_Y_ASIGNACION("Exponente y asignación", CategoriaToken.ASIGNACION),
+    MODULO_Y_ASIGNACION("Modulo y asignación", CategoriaToken.ASIGNACION),
 
     PALABRA_RESERVADA("Palabra reservada", CategoriaToken.PALABRAS_RESERVADAS),
 
@@ -98,6 +100,10 @@ enum class TipoToken(private val tipo:String, private val categoria: CategoriaTo
             return when(tipoToken) {
                 SUMA -> SUMA_Y_ASIGNACION
                 RESTA -> RESTA_Y_ASIGNACION
+                MULTIPLICACION -> MULTIPLICACION_Y_ASIGNACION
+                DIVISION -> DIVISION_Y_ASIGNACION
+                EXPONENTE -> EXPONENTE_Y_ASIGNACION
+                MODULO -> MODULO_Y_ASIGNACION
                 MAYOR_QUE -> MAYOR_O_IGUAL_QUE
                 MENOR_QUE -> MENOR_O_IGUAL_QUE
                 ASIGNACION -> IGUAL_A
