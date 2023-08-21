@@ -12,7 +12,9 @@ enum class CategoriaToken(private val categoria: String, private val color: Stri
     LOGICOS("Lógico", "Celeste"),
     ASIGNACION("Asignación", "Celeste"),
     PALABRAS_RESERVADAS("Palabra Clave", "Morado"),
-    CONSTANTES("Constante", "Rojo/anaranjado"),
+    CONSTANTES("Constante", "Anaranjado"),
     COMENTARIOS("Comentarios", "Gris"),
-    OTROS("Otros", "Verde")
+    OTROS("Otros", "Verde"),
+    ERROR("Error", "Rojo"),
+    NULL("Null", "Sin color")
 }
