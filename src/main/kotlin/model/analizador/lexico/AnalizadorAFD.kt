@@ -90,6 +90,10 @@ class AnalizadorAFD {
             estado = Estados.S6
             tokenActual += char.toString()
             tipoDeToken = TipoToken.isSignosSimples(char)
+        } else if (char.digitToInt() in 1..9) {
+            estado = Estados.S8
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.ENTERO
         } else if (char == '_') {
             estado = Estados.S9
             tokenActual += char.toString()
@@ -110,6 +114,10 @@ class AnalizadorAFD {
             estado = Estados.S14
             tokenActual += char.toString()
             tipoDeToken = TipoToken.DIVISION
+        } else if (char.digitToInt() == 0) {
+            estado = Estados.S15
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.ENTERO
         } else if (char == '*') {
             estado = Estados.S16
             tokenActual += char.toString()
@@ -187,8 +195,37 @@ class AnalizadorAFD {
             estadoTerminal(char)
         }
     }
-    private fun estadoS7(char: Char) {}
-    private fun estadoS8(char: Char) {}
+
+    /**
+     * Función dedicada al estado S7, recibe un entero o cero con un punto y verifica que continue otro dígito.
+     */
+    private fun estadoS7(char: Char) {
+        if (char.isDigit()) {
+            estado = Estados.S12
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.DECIMAL
+        } else {
+            estado = Estados.S2
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.ERROR
+        }
+    }
+
+    /**
+     * Función dedicada al estado S8, gestiona si un número es entero o se convierte en decimal.
+     */
+    private fun estadoS8(char: Char) {
+        if (char.isDigit()) {
+            tokenActual += char.toString()
+            //Sin cambios: estado = S8, tipoDeToken = ENTERO
+        } else if (char == '.') {
+            estado = Estados.S7
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.DECIMAL
+        } else {
+            estadoTerminal(char)
+        }
+    }
 
     /**
      * Función correspondiente al estado S10 que verifica los guiones bajos para un identificador.
@@ -245,12 +282,24 @@ class AnalizadorAFD {
             tipoDeToken = TipoToken.ERROR
         }
     }
-    private fun estadoS12(char: Char) {}
+
+    /**
+     * Función dedicada al estado S12, recibe un decimal y se encarga de acumular los digitos y/o guardarlo.
+     */
+    private fun estadoS12(char: Char) {
+        if (char.isDigit()) {
+            tokenActual += char.toString()
+            //Sin cambio: estado = S12, tipoDeToken = DECIMAL
+        } else {
+            estadoTerminal(char)
+        }
+    }
 
     /**
      * Función que corresponde al estado S14
      */
     private fun estadoS13(char: Char) {
+        //TODO revisar que los limites estén bien.
         if (char == '=') {
             estado = Estados.S2
             tokenActual += char.toString()
@@ -280,7 +329,19 @@ class AnalizadorAFD {
             estadoTerminal(char)
         }
     }
-    private fun estadoS15(char: Char) {}
+
+    /**
+     * Función dedicada al estado S15, recibe un cero o un punto, el primero lo guarda y el segundo lo manda a S7
+     */
+    private fun estadoS15(char: Char) {
+        if (char == '.') {
+            estado = Estados.S7
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.DECIMAL
+        } else {
+            estadoTerminal(char)
+        }
+    }
 
     /**
      * Función correspondiente al estado S18, analiza un símbolo de multiplicación
