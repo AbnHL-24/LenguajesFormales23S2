@@ -2,11 +2,13 @@ package model.analizador.lexico
 
 import model.clasesextension.StringUtil.Companion.normalizarSaltosDeLinea
 import model.analizador.lexico.estados.Estados
+import model.analizador.lexico.palabras.Constantes
+import model.analizador.lexico.palabras.Logicos
+import model.analizador.lexico.palabras.PalabrasReservadas
 import model.analizador.lexico.token.TipoToken
 import model.analizador.lexico.token.Token
 import model.analizador.lexico.transiciones.s1.S1S2
 import model.analizador.lexico.transiciones.s1.S1S7
-import model.analizador.lexico.transiciones.s11.S11S2
 
 /**
  * Esta clase se encarga del analizador lexíco.
@@ -133,20 +135,24 @@ class AnalizadorAFD {
     }
 
     /**
-     * Función correspondiente al estado S3 de cadenas con comilla doble;
+     * Función correspondiente al estado S3 de cadenas con comillas dobles;
      */
     private fun estadoS3(char: Char) {
-        if (char == '"') {
-            estado = Estados.S2
-            tokenActual += char.toString()
-            tipoDeToken = TipoToken.CADENA
-        } else if (char == '\n') {
-            estado = Estados.S2
-            tokenActual += char.toString()
-            tipoDeToken = TipoToken.ERROR
-        } else {
-            tokenActual += char.toString()
-            //Sin cambios: estado = S3, tipoDeToken = CADENA
+        when (char) {
+            '"' -> {
+                estado = Estados.S2
+                tokenActual += char.toString()
+                tipoDeToken = TipoToken.CADENA
+            }
+            '\n' -> {
+                estado = Estados.S2
+                tokenActual += char.toString()
+                tipoDeToken = TipoToken.ERROR
+            }
+            else -> {
+                tokenActual += char.toString()
+                //Sin cambios: estado = S3, tipoDeToken = CADENA
+            }
         }
     }
 
@@ -165,28 +171,31 @@ class AnalizadorAFD {
     }
 
     /**
-     * Función correspondiente al estado S6 de cadena de comilla simple
+     * Función correspondiente al estado S6 de cadena de comillas simples
      */
     private fun estadoS5(char: Char) {
-        if (char == '\'') {
-            estado = Estados.S2
-            tokenActual += char.toString()
-            tipoDeToken = TipoToken.CADENA
-        } else if (char == '\n') {
-            estado = Estados.S2
-            tokenActual += char.toString()
-            tipoDeToken = TipoToken.ERROR
-        } else {
-            tokenActual += char.toString()
-            //Sin cambios: estado = S6, tipoDeToken = CADENA
+        when (char) {
+            '\'' -> {
+                estado = Estados.S2
+                tokenActual += char.toString()
+                tipoDeToken = TipoToken.CADENA
+            }
+            '\n' -> {
+                estado = Estados.S2
+                tokenActual += char.toString()
+                tipoDeToken = TipoToken.ERROR
+            }
+            else -> {
+                tokenActual += char.toString()
+                //Sin cambios: estado = S6, tipoDeToken = CADENA
+            }
         }
     }
 
     /**
-     * Función corresponiente al estado S7 que puede aceptar signos simples o agregarles un =.
+     * Función correspondiente al estado S7 que puede aceptar signos simples o agregarles un =.
      */
     private fun estadoS6(char: Char) {
-        //TODO rectificar el estado S7 tras terminar las transiciones hacia el
         if (char == '=') {
             estado = Estados.S2
             tokenActual += char.toString()
@@ -249,22 +258,22 @@ class AnalizadorAFD {
      * Función correspondiente al estado S11, sigue concatenando un identificador o lo acepta.
      */
     private fun estadoS10(char: Char) {
-        //TODO completar el estado S11 al final de todo, pues es necesario tener todos los limitadores
         if (char == '_' || char.isLetterOrDigit()){
             tokenActual += char.toString()
             //Sin cambios: estado = S2, tipoDeToken = IDENTIFICADOR
-        } else if (char.isWhitespace()){
-            agregarToken() //Guardo el token y limpio (ahora es S1).
-            //Se comenta lo siguiente porque al ser un espacio en blanco, toca ir al siguiente carácter.
-            //estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
         } else {
-            //Aquí entran todos los tokens que limitan un identificador correctamente pero inician otros.
-            if (S11S2.isdelimitadorDeIentificador(char)) {
-                estadoTerminal(char)
-                /*estado = Estados.S2
-                tokenActual += char.toString()
-                tipoDeToken = TipoToken.isOtros(char)*/
+            when (tokenActual) {
+                in Constantes.booleanas -> {
+                    tipoDeToken = TipoToken.BOOLEANA
+                }
+                in Logicos.logicos -> {
+                    tipoDeToken = TipoToken.isTipoDeLogico(tokenActual)
+                }
+                in PalabrasReservadas.palabrasClave -> {
+                    tipoDeToken = TipoToken.PALABRA_RESERVADA
+                }
             }
+            estadoTerminal(char)
         }
     }
 
@@ -284,7 +293,7 @@ class AnalizadorAFD {
     }
 
     /**
-     * Función dedicada al estado S12, recibe un decimal y se encarga de acumular los digitos y/o guardarlo.
+     * Función dedicada al estado S12, recibe un decimal y se encarga de acumular los dígitos y/o guardarlo.
      */
     private fun estadoS12(char: Char) {
         if (char.isDigit()) {
@@ -299,7 +308,6 @@ class AnalizadorAFD {
      * Función que corresponde al estado S14
      */
     private fun estadoS13(char: Char) {
-        //TODO revisar que los limites estén bien.
         if (char == '=') {
             estado = Estados.S2
             tokenActual += char.toString()
@@ -317,16 +325,20 @@ class AnalizadorAFD {
      * Funcion correspondiente al estado S16, analiza una barra de división.
      */
     private fun estadoS14(char: Char) {
-        if (char == '/') {
-            estado = Estados.S6
-            tokenActual += char.toString()
-            //Sin cambios: tipoDeToken = DIVISION
-        } else if (char == '=') {
-            estado = Estados.S2
-            tokenActual += char.toString()
-            tipoDeToken = TipoToken.DIVISION_Y_ASIGNACION
-        } else {
-            estadoTerminal(char)
+        when (char) {
+            '/' -> {
+                estado = Estados.S6
+                tokenActual += char.toString()
+                //Sin cambios: tipoDeToken = DIVISION
+            }
+            '=' -> {
+                estado = Estados.S2
+                tokenActual += char.toString()
+                tipoDeToken = TipoToken.DIVISION_Y_ASIGNACION
+            }
+            else -> {
+                estadoTerminal(char)
+            }
         }
     }
 
@@ -347,16 +359,20 @@ class AnalizadorAFD {
      * Función correspondiente al estado S18, analiza un símbolo de multiplicación
      */
     private fun estadoS16(char: Char) {
-        if (char == '*') {
-            estado = Estados.S6
-            tokenActual += char.toString()
-            tipoDeToken = TipoToken.EXPONENTE
-        } else if (char == '=') {
-            estado = Estados.S2
-            tokenActual += char.toString()
-            tipoDeToken = TipoToken.MULTIPLICACION_Y_ASIGNACION
-        } else {
-            estadoTerminal(char)
+        when (char) {
+            '*' -> {
+                estado = Estados.S6
+                tokenActual += char.toString()
+                tipoDeToken = TipoToken.EXPONENTE
+            }
+            '=' -> {
+                estado = Estados.S2
+                tokenActual += char.toString()
+                tipoDeToken = TipoToken.MULTIPLICACION_Y_ASIGNACION
+            }
+            else -> {
+                estadoTerminal(char)
+            }
         }
     }
 

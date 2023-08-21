@@ -95,7 +95,9 @@ enum class TipoToken(private val tipo:String, private val categoria: CategoriaTo
             }
         }
 
-
+        /**
+         * Retorna que tipo de token compuesto es.
+         */
         fun isSignosCompuestos(tipoToken: TipoToken): TipoToken {
             return when(tipoToken) {
                 SUMA -> SUMA_Y_ASIGNACION
@@ -107,6 +109,16 @@ enum class TipoToken(private val tipo:String, private val categoria: CategoriaTo
                 MAYOR_QUE -> MAYOR_O_IGUAL_QUE
                 MENOR_QUE -> MENOR_O_IGUAL_QUE
                 ASIGNACION -> IGUAL_A
+                else -> ERROR
+            }
+        }
+
+
+        fun isTipoDeLogico(token: String): TipoToken {
+            return when(token) {
+                "and" -> Y
+                "or" -> O
+                "not" -> NEGACION
                 else -> ERROR
             }
         }
