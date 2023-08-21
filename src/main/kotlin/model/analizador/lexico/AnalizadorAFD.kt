@@ -48,20 +48,18 @@ class AnalizadorAFD {
                 Estados.S2 -> estadoS2(char)
                 Estados.S3 -> estadoS3(char)
                 Estados.S4 -> estadoS4(char)
-                Estados.S5 -> estadoSobrante(char)
-                Estados.S6 -> estadoS5(char)
-                Estados.S7 -> estadoS6(char)
-                Estados.S8 -> estadoS7(char)
-                Estados.S9 -> estadoS8(char)
-                Estados.S10 -> estadoS9(char)
-                Estados.S11 -> estadoS10(char)
-                Estados.S12 -> estadoS11(char)
-                Estados.S13 -> estadoS12(char)
-                Estados.S14 -> estadoS13(char)
-                Estados.S15 -> estadoS14(char)
-                Estados.S16 -> estadoS15(char)
-                Estados.S17 -> estadoS16(char)
-                Estados.S18 -> estadoS17(char)
+                Estados.S5 -> estadoS5(char)
+                Estados.S6 -> estadoS6(char)
+                Estados.S7 -> estadoS7(char)
+                Estados.S8 -> estadoS8(char)
+                Estados.S9 -> estadoS9(char)
+                Estados.S10 -> estadoS10(char)
+                Estados.S11 -> estadoS11(char)
+                Estados.S12 -> estadoS12(char)
+                Estados.S13 -> estadoS13(char)
+                Estados.S14 -> estadoS14(char)
+                Estados.S15 -> estadoS15(char)
+                Estados.S16 -> estadoS16(char)
             }
         }
 
@@ -76,40 +74,44 @@ class AnalizadorAFD {
             estado = Estados.S2
             tokenActual += char.toString()
             tipoDeToken = TipoToken.isOtros(char)
-        } else if (char == '#') {
-            estado = Estados.S4
-            tokenActual += char.toString()
-            tipoDeToken = TipoToken.COMENTARIO
         }else if (char == '"') {
             estado = Estados.S3
             tokenActual += char.toString()
             tipoDeToken = TipoToken.CADENA
-        } else if (char == '\'') {
-            estado = Estados.S6
+        }  else if (char == '#') {
+            estado = Estados.S4
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.COMENTARIO
+        }else if (char == '\'') {
+            estado = Estados.S5
             tokenActual += char.toString()
             tipoDeToken = TipoToken.CADENA
         } else if (S1S7.isTransicionS1S7(char)) {
-            estado = Estados.S7
+            estado = Estados.S6
             tokenActual += char.toString()
             tipoDeToken = TipoToken.isSignosSimples(char)
         } else if (char == '_') {
-            estado = Estados.S10
+            estado = Estados.S9
             tokenActual += char.toString()
             tipoDeToken = TipoToken.IDENTIFICADOR
         } else if (char.isLetter()) {
-            estado = Estados.S11
+            estado = Estados.S10
             tokenActual += char.toString()
             tipoDeToken = TipoToken.IDENTIFICADOR
         } else if (char == '!') {
-            estado = Estados.S12
+            estado = Estados.S11
             tokenActual += char.toString()
             tipoDeToken = TipoToken.DIFERENTE
+        }else if (char == '-') {
+            estado = Estados.S13
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.RESTA
         } else if (char == '/') {
-            estado = Estados.S16
+            estado = Estados.S14
             tokenActual += char.toString()
             tipoDeToken = TipoToken.DIVISION
         } else if (char == '*') {
-            estado = Estados.S18
+            estado = Estados.S16
             tokenActual += char.toString()
             tipoDeToken = TipoToken.MULTIPLICACION
         }
@@ -119,8 +121,7 @@ class AnalizadorAFD {
      * Función correspondiente al estado de aceptación S2
      */
     private fun estadoS2(char: Char) {
-        agregarToken() //Guardo el token y limpio (ahora es S1).
-        estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
+        estadoTerminal(char)
     }
 
     /**
@@ -183,8 +184,7 @@ class AnalizadorAFD {
             tokenActual += char.toString()
             tipoDeToken = TipoToken.isSignosCompuestos(tipoDeToken)
         } else {
-            agregarToken() //Guardo el token y limpio (ahora es S1).
-            estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
+            estadoTerminal(char)
         }
     }
     private fun estadoS7(char: Char) {}
@@ -198,7 +198,7 @@ class AnalizadorAFD {
             tokenActual += char.toString()
             //Sin cambios: estado = S2, tipoDeToken = IDENTIFICADOR
         } else if (char.isLetterOrDigit()) {
-            estado = Estados.S11
+            estado = Estados.S10
             tokenActual += char.toString()
             //Sin cambios: tipoDeTokenIDENTIFICADOR
         } else {
@@ -223,8 +223,7 @@ class AnalizadorAFD {
         } else {
             //Aquí entran todos los tokens que limitan un identificador correctamente pero inician otros.
             if (S11S2.isdelimitadorDeIentificador(char)) {
-                agregarToken() //Guardo el token y limpio (ahora es S1).
-                estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
+                estadoTerminal(char)
                 /*estado = Estados.S2
                 tokenActual += char.toString()
                 tipoDeToken = TipoToken.isOtros(char)*/
@@ -247,15 +246,30 @@ class AnalizadorAFD {
         }
     }
     private fun estadoS12(char: Char) {}
-    private fun estadoS13(char: Char) {}
-    private fun estadoS14(char: Char) {}
+
+    /**
+     * Función que corresponde al estado S14
+     */
+    private fun estadoS13(char: Char) {
+        if (char == '=') {
+            estado = Estados.S2
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.RESTA_Y_ASIGNACION
+        } else if (char.digitToInt() in 1..9) {
+            estado = Estados.S8
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.ENTERO
+        } else {
+            estadoTerminal(char)
+        }
+    }
 
     /**
      * Funcion correspondiente al estado S16, analiza una barra de división.
      */
-    private fun estadoS15(char: Char) {
+    private fun estadoS14(char: Char) {
         if (char == '/') {
-            estado = Estados.S7
+            estado = Estados.S6
             tokenActual += char.toString()
             //Sin cambios: tipoDeToken = DIVISION
         } else if (char == '=') {
@@ -263,18 +277,17 @@ class AnalizadorAFD {
             tokenActual += char.toString()
             tipoDeToken = TipoToken.DIVISION_Y_ASIGNACION
         } else {
-            agregarToken() //Guardo el token y limpio (ahora es S1).
-            estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
+            estadoTerminal(char)
         }
     }
-    private fun estadoS16(char: Char) {}
+    private fun estadoS15(char: Char) {}
 
     /**
      * Función correspondiente al estado S18, analiza un símbolo de multiplicación
      */
-    private fun estadoS17(char: Char) {
+    private fun estadoS16(char: Char) {
         if (char == '*') {
-            estado = Estados.S7
+            estado = Estados.S6
             tokenActual += char.toString()
             tipoDeToken = TipoToken.EXPONENTE
         } else if (char == '=') {
@@ -282,8 +295,7 @@ class AnalizadorAFD {
             tokenActual += char.toString()
             tipoDeToken = TipoToken.MULTIPLICACION_Y_ASIGNACION
         } else {
-            agregarToken() //Guardo el token y limpio (ahora es S1).
-            estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
+            estadoTerminal(char)
         }
     }
 
@@ -303,5 +315,10 @@ class AnalizadorAFD {
         val tokenAceptado = Token (tokenActual, tipoDeToken, fila, columna)
         listaDeTokens.add(tokenAceptado)
         restablecerAS1()
+    }
+
+    private fun estadoTerminal(char: Char) {
+        agregarToken() //Guardo el token y limpio (ahora es S1).
+        estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
     }
 }

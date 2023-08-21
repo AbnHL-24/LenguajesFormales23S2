@@ -19,7 +19,5 @@ enum class Estados {
     S13,
     S14,
     S15,
-    S16,
-    S17,
-    S18
+    S16
 }
