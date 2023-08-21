@@ -48,20 +48,20 @@ class AnalizadorAFD {
                 Estados.S2 -> estadoS2(char)
                 Estados.S3 -> estadoS3(char)
                 Estados.S4 -> estadoS4(char)
-                Estados.S5 -> estadoS5(char)
-                Estados.S6 -> estadoS6(char)
-                Estados.S7 -> estadoS7(char)
-                Estados.S8 -> estadoS8(char)
-                Estados.S9 -> estadoS9(char)
-                Estados.S10 -> estadoS10(char)
-                Estados.S11 -> estadoS11(char)
-                Estados.S12 -> estadoS12(char)
-                Estados.S13 -> estadoS13(char)
-                Estados.S14 -> estadoS14(char)
-                Estados.S15 -> estadoS15(char)
-                Estados.S16 -> estadoS16(char)
-                Estados.S17 -> estadoS17(char)
-                Estados.S18 -> estadoS18(char)
+                Estados.S5 -> estadoSobrante(char)
+                Estados.S6 -> estadoS5(char)
+                Estados.S7 -> estadoS6(char)
+                Estados.S8 -> estadoS7(char)
+                Estados.S9 -> estadoS8(char)
+                Estados.S10 -> estadoS9(char)
+                Estados.S11 -> estadoS10(char)
+                Estados.S12 -> estadoS11(char)
+                Estados.S13 -> estadoS12(char)
+                Estados.S14 -> estadoS13(char)
+                Estados.S15 -> estadoS14(char)
+                Estados.S16 -> estadoS15(char)
+                Estados.S17 -> estadoS16(char)
+                Estados.S18 -> estadoS17(char)
             }
         }
 
@@ -154,12 +154,11 @@ class AnalizadorAFD {
             tokenActual += char.toString()
         }
     }
-    private fun estadoS5(char: Char) {}
 
     /**
      * Función correspondiente al estado S6 de cadena de comilla simple
      */
-    private fun estadoS6(char: Char) {
+    private fun estadoS5(char: Char) {
         if (char == '\'') {
             estado = Estados.S2
             tokenActual += char.toString()
@@ -177,7 +176,7 @@ class AnalizadorAFD {
     /**
      * Función corresponiente al estado S7 que puede aceptar signos simples o agregarles un =.
      */
-    private fun estadoS7(char: Char) {
+    private fun estadoS6(char: Char) {
         //TODO rectificar el estado S7 tras terminar las transiciones hacia el
         if (char == '=') {
             estado = Estados.S2
@@ -188,13 +187,13 @@ class AnalizadorAFD {
             estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
         }
     }
+    private fun estadoS7(char: Char) {}
     private fun estadoS8(char: Char) {}
-    private fun estadoS9(char: Char) {}
 
     /**
      * Función correspondiente al estado S10 que verifica los guiones bajos para un identificador.
      */
-    private fun estadoS10(char: Char) {
+    private fun estadoS9(char: Char) {
         if (char == '_'){
             tokenActual += char.toString()
             //Sin cambios: estado = S2, tipoDeToken = IDENTIFICADOR
@@ -212,7 +211,7 @@ class AnalizadorAFD {
     /**
      * Función correspondiente al estado S11, sigue concatenando un identificador o lo acepta.
      */
-    private fun estadoS11(char: Char) {
+    private fun estadoS10(char: Char) {
         //TODO completar el estado S11 al final de todo, pues es necesario tener todos los limitadores
         if (char == '_' || char.isLetterOrDigit()){
             tokenActual += char.toString()
@@ -236,7 +235,7 @@ class AnalizadorAFD {
     /**
      * Función correspondiente al estado S12, analiza la comparación 'diferente'
      */
-    private fun estadoS12(char: Char) {
+    private fun estadoS11(char: Char) {
         if (char == '=') {
             estado = Estados.S2
             tokenActual += char.toString()
@@ -247,14 +246,14 @@ class AnalizadorAFD {
             tipoDeToken = TipoToken.ERROR
         }
     }
+    private fun estadoS12(char: Char) {}
     private fun estadoS13(char: Char) {}
     private fun estadoS14(char: Char) {}
-    private fun estadoS15(char: Char) {}
 
     /**
      * Funcion correspondiente al estado S16, analiza una barra de división.
      */
-    private fun estadoS16(char: Char) {
+    private fun estadoS15(char: Char) {
         if (char == '/') {
             estado = Estados.S7
             tokenActual += char.toString()
@@ -268,12 +267,12 @@ class AnalizadorAFD {
             estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
         }
     }
-    private fun estadoS17(char: Char) {}
+    private fun estadoS16(char: Char) {}
 
     /**
      * Función correspondiente al estado S18, analiza un símbolo de multiplicación
      */
-    private fun estadoS18(char: Char) {
+    private fun estadoS17(char: Char) {
         if (char == '*') {
             estado = Estados.S7
             tokenActual += char.toString()
