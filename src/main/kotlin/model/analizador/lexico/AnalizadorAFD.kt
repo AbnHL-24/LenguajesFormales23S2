@@ -6,6 +6,7 @@ import model.analizador.lexico.token.TipoToken
 import model.analizador.lexico.token.Token
 import model.analizador.lexico.transiciones.s1.S1S2
 import model.analizador.lexico.transiciones.s1.S1S7
+import model.analizador.lexico.transiciones.s11.S11S2
 
 /**
  * Esta clase se encarga del analizador lexíco.
@@ -42,9 +43,6 @@ class AnalizadorAFD {
                 columna = 1
             } else columna++
 
-
-
-            //Si es posible usar el when
             when(estado) {
                 Estados.S1 -> estadoS1(char)
                 Estados.S2 -> estadoS2(char)
@@ -94,6 +92,18 @@ class AnalizadorAFD {
             estado = Estados.S7
             tokenActual += char.toString()
             tipoDeToken = TipoToken.isSignosSimples(char)
+        } else if (char == '_') {
+            estado = Estados.S10
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.IDENTIFICADOR
+        } else if (char.isLetter()) {
+            estado = Estados.S11
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.IDENTIFICADOR
+        } else if (char == '/') {
+            estado = Estados.S16
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.DIVISION
         }
     }
 
@@ -101,7 +111,8 @@ class AnalizadorAFD {
      * Función correspondiente al estado de aceptación S2
      */
     private fun estadoS2(char: Char) {
-        agregarToken()
+        agregarToken() //Guardo el token y limpio (ahora es S1).
+        estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
     }
 
     /**
@@ -118,7 +129,7 @@ class AnalizadorAFD {
             tipoDeToken = TipoToken.ERROR
         } else {
             tokenActual += char.toString()
-            //No es necesario modificar el estado ni el tipo de token.
+            //Sin cambios: estado = S3, tipoDeToken = CADENA
         }
     }
 
@@ -127,7 +138,9 @@ class AnalizadorAFD {
      */
     private fun estadoS4(char: Char) {
         if (char == '\n') {
-            agregarToken()
+            estado = Estados.S2
+            tokenActual += char.toString()
+            tipoDeToken = TipoToken.COMENTARIO
         }
         else {
             tokenActual += char.toString()
@@ -149,7 +162,7 @@ class AnalizadorAFD {
             tipoDeToken = TipoToken.ERROR
         } else {
             tokenActual += char.toString()
-            //No es necesario modificar el estado ni el tipo de token.
+            //Sin cambios: estado = S6, tipoDeToken = CADENA
         }
     }
 
@@ -157,22 +170,64 @@ class AnalizadorAFD {
      * Función corresponiente al estado S7 que puede aceptar signos simples o agregarles un =.
      */
     private fun estadoS7(char: Char) {
+        //TODO rectificar el estado S7 tras terminar las transiciones hacia el
         if (char == '=') {
             estado = Estados.S2
             tokenActual += char.toString()
             tipoDeToken = TipoToken.isSignosCompuestos(tipoDeToken)
         } else {
-            agregarToken()
+            agregarToken() //Guardo el token y limpio (ahora es S1).
+            estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
         }
     }
     private fun estadoS8(char: Char) {}
     private fun estadoS9(char: Char) {}
-    private fun estadoS10(char: Char) {}
-    private fun estadoS11(char: Char) {}
+
+    /**
+     * Función correspondiente al estado S10 que verifica los guiones bajos para un identificador.
+     */
+    private fun estadoS10(char: Char) {
+        if (char == '_'){
+            tokenActual += char.toString()
+            //Sin cambios: estado = S2, tipoDeToken = IDENTIFICADOR
+        } else if (char.isLetterOrDigit()) {
+            estado = Estados.S11
+            tokenActual += char.toString()
+            //Sin cambios: tipoDeTokenIDENTIFICADOR
+        }
+    }
+
+    /**
+     * Función correspondiente al estado S11, sigue concatenando un identificador o lo acepta.
+     */
+    private fun estadoS11(char: Char) {
+        //TODO completar el estado S11 al final de todo, pues es necesario tener todos los limitadores
+        if (char == '_' || char.isLetterOrDigit()){
+            tokenActual += char.toString()
+            //Sin cambios: estado = S2, tipoDeToken = IDENTIFICADOR
+        } else if (char.isWhitespace()){
+            agregarToken() //Guardo el token y limpio (ahora es S1).
+            //Se comenta lo siguiente porque al ser un espacio en blanco, toca ir al siguiente carácter.
+            //estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
+        } else {
+            //Aquí entran todos los tokens que limitan un identificador correctamente pero inician otros.
+            if (S11S2.isdelimitadorDeIentificador(char)) {
+                agregarToken() //Guardo el token y limpio (ahora es S1).
+                estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
+                /*estado = Estados.S2
+                tokenActual += char.toString()
+                tipoDeToken = TipoToken.isOtros(char)*/
+            }
+        }
+    }
     private fun estadoS12(char: Char) {}
     private fun estadoS13(char: Char) {}
     private fun estadoS14(char: Char) {}
     private fun estadoS15(char: Char) {}
+
+    /**
+     * Funcion correspondiente al estado S16, analiza una barra de división.
+     */
     private fun estadoS16(char: Char) {}
     private fun estadoS17(char: Char) {}
     private fun estadoS18(char: Char) {}

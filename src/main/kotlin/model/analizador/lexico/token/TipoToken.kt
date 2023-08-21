@@ -48,6 +48,7 @@ enum class TipoToken(private val tipo:String, private val categoria: CategoriaTo
     LLAVE_CIERRE("Paréntesis cierre", CategoriaToken.OTROS),
     CORCHETE_APERTURA("Corchete apertura", CategoriaToken.OTROS),
     CORCHETE_CIERRE("Corchete cierre", CategoriaToken.OTROS),
+    PUNTO("Punto", CategoriaToken.OTROS),
     COMA("Coma", CategoriaToken.OTROS),
     PUNTO_Y_COMA("Punto y coma", CategoriaToken.OTROS),
     DOS_PUNTOS("Dos puntos", CategoriaToken.OTROS),
@@ -64,6 +65,7 @@ enum class TipoToken(private val tipo:String, private val categoria: CategoriaTo
          */
         fun isOtros(char: Char): TipoToken {
             return when(char) {
+                '.' -> PUNTO
                 ',' -> COMA
                 ';' -> PUNTO_Y_COMA
                 ':' -> DOS_PUNTOS
