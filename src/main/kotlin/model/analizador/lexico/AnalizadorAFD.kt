@@ -23,6 +23,7 @@ class AnalizadorAFD {
     private var tipoDeToken: TipoToken = TipoToken.NULL
     private var fila: Int = 1
     private var columna: Int = 0
+    private var columnaToken = 0
 
     fun  generarTokens(entradaString: String): ArrayList<Token>{
         listaDeTokens.clear()
@@ -43,7 +44,7 @@ class AnalizadorAFD {
         for (char in entradaChars) {
             if (char == '\n') {
                 fila++
-                columna = 1
+                columna = 0
             } else columna++
 
             when(estado) {
@@ -73,6 +74,7 @@ class AnalizadorAFD {
      * Función correspondiente al estado inicial S1
      */
     private fun estadoS1(char: Char) {
+        columnaToken = columna
         if (S1S2.isTransicionS1S2(char)) {
             estado = Estados.S2
             tokenActual += char.toString()
@@ -390,7 +392,7 @@ class AnalizadorAFD {
      * Genera un nuevo token, lo agrega a la lista de tokens y restablece a S1.
      */
     private fun agregarToken() {
-        val tokenAceptado = Token (tokenActual, tipoDeToken, fila, columna)
+        val tokenAceptado = Token (tokenActual, tipoDeToken, fila, columnaToken)
         listaDeTokens.add(tokenAceptado)
         restablecerAS1()
     }
