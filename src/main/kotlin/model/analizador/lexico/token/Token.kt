@@ -8,8 +8,8 @@ package model.analizador.lexico.token
  * @param columna almacena la columna
  */
 class Token(
-    private val token: String,
-    private val tipoDeToken : TipoToken,
-    private val fila: Int,
-    private val columna: Int,
-    private val patron: String)
+    val token: String,
+    val tipoDeToken : TipoToken,
+    val fila: Int,
+    val columna: Int,
+    val patron: String)

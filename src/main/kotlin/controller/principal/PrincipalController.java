@@ -6,13 +6,14 @@ import model.analizador.lexico.token.Token;
 import view.principal.PrincipalView;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class PrincipalController implements ActionListener {
     private PrincipalView principalView;
-    private ArrayList tokens;
+    private ArrayList<Token> tokens = new ArrayList<>();
 
     public PrincipalController(PrincipalView principalView) {
         this.principalView = principalView;
@@ -45,11 +46,24 @@ public class PrincipalController implements ActionListener {
             String texto = principalView.getjTAEditor().getText().toString();
             AnalizadorAFD analizadorAFD = new AnalizadorAFD();
             tokens = analizadorAFD.generarTokens(texto);
-            for (Object tk :
+            for (Token tk :
                     tokens) {
                 System.out.println(tk.toString());
             }
             System.out.println("A ver que sale");
+
+            //codigo chatgpt
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("Token");
+            model.addColumn("Patrón");
+            model.addColumn("Lexema");
+            model.addColumn("Fila");
+            model.addColumn("Columna");
+
+            for (Token tk : tokens) {
+                model.addRow(new Object[]{tk.getTipoDeToken().toString(), tk.getPatron(), tk.getToken(), tk.getFila(), tk.getColumna()});
+            }
+            principalView.getjTReporte().setModel(model);
         }
         if (e.getSource() == principalView.getjMIReportes()) {}
         if (e.getSource() == principalView.getjMIGraficos()) {}
