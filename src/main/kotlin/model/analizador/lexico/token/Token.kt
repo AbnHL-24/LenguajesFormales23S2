@@ -11,4 +11,5 @@ class Token(
     private val token: String,
     private val tipoDeToken : TipoToken,
     private val fila: Int,
-    private val columna: Int)
+    private val columna: Int,
+    private val patron: String)

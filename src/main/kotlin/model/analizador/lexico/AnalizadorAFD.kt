@@ -392,7 +392,8 @@ class AnalizadorAFD {
      * Genera un nuevo token, lo agrega a la lista de tokens y restablece a S1.
      */
     private fun agregarToken() {
-        val tokenAceptado = Token (tokenActual, tipoDeToken, fila, columnaToken)
+        val patron = definirPatron()
+        val tokenAceptado = Token (tokenActual, tipoDeToken, fila, columnaToken, patron)
         listaDeTokens.add(tokenAceptado)
         restablecerAS1()
     }
@@ -400,5 +401,57 @@ class AnalizadorAFD {
     private fun estadoTerminal(char: Char) {
         agregarToken() //Guardo el token y limpio (ahora es S1).
         estadoS1(char) // Tras guardar el token, analizo el nuevo char con estadoS1()
+    }
+
+    private fun definirPatron(): String {
+        return when(tipoDeToken) {
+            TipoToken.IDENTIFICADOR -> "((_+([a-zA-Z]|[0-9])+|[a-zA-Z])(_|[a-zA-Z]|[0-9])*)"
+
+            TipoToken.SUMA -> "+"
+            TipoToken.RESTA -> "-"
+            TipoToken.MULTIPLICACION -> "*"
+            TipoToken.EXPONENTE -> "**"
+            TipoToken.DIVISION -> "/ o //"
+            TipoToken.MODULO -> "%"
+
+            TipoToken.IGUAL_A -> "=="
+            TipoToken.DIFERENTE -> "!="
+            TipoToken.MAYOR_QUE -> ">"
+            TipoToken.MENOR_QUE -> "<"
+            TipoToken.MAYOR_O_IGUAL_QUE -> ">="
+            TipoToken.MENOR_O_IGUAL_QUE -> "<="
+
+            TipoToken.ASIGNACION -> "="
+            TipoToken.SUMA_Y_ASIGNACION -> "+="
+            TipoToken.RESTA_Y_ASIGNACION -> "-="
+            TipoToken.MULTIPLICACION_Y_ASIGNACION -> "*="
+            TipoToken.DIVISION_Y_ASIGNACION -> "/="
+            TipoToken.EXPONENTE_Y_ASIGNACION -> "**="
+            TipoToken.MODULO_Y_ASIGNACION -> "%="
+
+            TipoToken.PALABRA_RESERVADA -> tokenActual
+
+            TipoToken.ENTERO -> "((-?[1-9]+)|0)"
+            TipoToken.DECIMAL -> "(((-?[1-9][0-9]*)|0)(\\.([0-9]+)))"
+            TipoToken.CADENA -> "\"([^\"'\\r\\n\\\\]|\\\\.)*\"|'([^'\"\\r\\n\\\\]|\\\\.)*'"
+            TipoToken.BOOLEANA -> tokenActual
+
+            TipoToken.COMENTARIO -> "#([^\\r\\n]*)\\n"
+
+            TipoToken.PARENTESIS_APERTURA -> "("
+            TipoToken.PARENTESIS_CIERRE -> ")"
+            TipoToken.LLAVE_APERTURA -> "{"
+            TipoToken.LLAVE_CIERRE -> "}"
+            TipoToken.CORCHETE_APERTURA -> "["
+            TipoToken.CORCHETE_CIERRE -> "]"
+            TipoToken.PUNTO -> "."
+            TipoToken.COMA -> ","
+            TipoToken.PUNTO_Y_COMA -> ";"
+            TipoToken.DOS_PUNTOS -> ":"
+
+            TipoToken.NULL -> "Null"
+
+            else -> "Error"
+        }
     }
 }
