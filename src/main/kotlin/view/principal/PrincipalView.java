@@ -276,14 +276,6 @@ public class PrincipalView extends javax.swing.JFrame {
         this.jTAEditor = jTAEditor;
     }
 
-    public JTextArea getjTAError() {
-        return jTAError;
-    }
-
-    public void setjTAError(JTextArea jTAError) {
-        this.jTAError = jTAError;
-    }
-
     public JTable getjTReporte() {
         return jTReporte;
     }
