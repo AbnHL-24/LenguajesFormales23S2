@@ -1,6 +1,7 @@
 package model.analizador.lexico
 
 import model.clasesextension.StringUtil.Companion.normalizarSaltosDeLinea
+import model.clasesextension.CharUtil.Companion.isDigitNotZero
 import model.analizador.lexico.estados.Estados
 import model.analizador.lexico.palabras.Constantes
 import model.analizador.lexico.palabras.Logicos
@@ -8,7 +9,7 @@ import model.analizador.lexico.palabras.PalabrasReservadas
 import model.analizador.lexico.token.TipoToken
 import model.analizador.lexico.token.Token
 import model.analizador.lexico.transiciones.s1.S1S2
-import model.analizador.lexico.transiciones.s1.S1S7
+import model.analizador.lexico.transiciones.s1.S1S6
 
 /**
  * Esta clase se encarga del analizador lexíco.
@@ -23,7 +24,7 @@ class AnalizadorAFD {
     private var fila: Int = 1
     private var columna: Int = 0
 
-    fun  generarTokens(entradaString: String): MutableList<Token>{
+    fun  generarTokens(entradaString: String): ArrayList<Token>{
         listaDeTokens.clear()
 
         estado = Estados.S1
@@ -65,7 +66,7 @@ class AnalizadorAFD {
             }
         }
 
-        return listaDeTokens
+        return  ArrayList<Token>(listaDeTokens)
     }
 
     /**
@@ -88,11 +89,11 @@ class AnalizadorAFD {
             estado = Estados.S5
             tokenActual += char.toString()
             tipoDeToken = TipoToken.CADENA
-        } else if (S1S7.isTransicionS1S7(char)) {
+        } else if (S1S6.isTransicionS1S6(char)) {
             estado = Estados.S6
             tokenActual += char.toString()
             tipoDeToken = TipoToken.isSignosSimples(char)
-        } else if (char.digitToInt() in 1..9) {
+        } else if (Char.Companion.isDigitNotZero(char)) {
             estado = Estados.S8
             tokenActual += char.toString()
             tipoDeToken = TipoToken.ENTERO
@@ -116,7 +117,7 @@ class AnalizadorAFD {
             estado = Estados.S14
             tokenActual += char.toString()
             tipoDeToken = TipoToken.DIVISION
-        } else if (char.digitToInt() == 0) {
+        } else if (char == '0') {
             estado = Estados.S15
             tokenActual += char.toString()
             tipoDeToken = TipoToken.ENTERO
@@ -193,7 +194,7 @@ class AnalizadorAFD {
     }
 
     /**
-     * Función correspondiente al estado S7 que puede aceptar signos simples o agregarles un =.
+     * Función correspondiente al estado S6 que puede aceptar signos simples o agregarles un =.
      */
     private fun estadoS6(char: Char) {
         if (char == '=') {
@@ -312,7 +313,7 @@ class AnalizadorAFD {
             estado = Estados.S2
             tokenActual += char.toString()
             tipoDeToken = TipoToken.RESTA_Y_ASIGNACION
-        } else if (char.digitToInt() in 1..9) {
+        } else if (Char.Companion.isDigitNotZero(char)) {
             estado = Estados.S8
             tokenActual += char.toString()
             tipoDeToken = TipoToken.ENTERO
