@@ -9,6 +9,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 
 /**
@@ -37,7 +38,7 @@ public class PrincipalView extends javax.swing.JFrame {
         jTAEditor = new javax.swing.JTextArea();
         jSeparator1 = new javax.swing.JSeparator();
         jSPErrores = new javax.swing.JScrollPane();
-        jTAError = new javax.swing.JTextArea();
+        jTReporte = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMArchivo = new javax.swing.JMenu();
         jMINuevo = new javax.swing.JMenuItem();
@@ -56,9 +57,18 @@ public class PrincipalView extends javax.swing.JFrame {
         jTAEditor.setRows(5);
         jSPEditor.setViewportView(jTAEditor);
 
-        jTAError.setColumns(20);
-        jTAError.setRows(5);
-        jSPErrores.setViewportView(jTAError);
+        jTReporte.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5"
+            }
+        ));
+        jSPErrores.setViewportView(jTReporte);
 
         jMArchivo.setText("Archivo");
 
@@ -96,27 +106,23 @@ public class PrincipalView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(1028, 1028, 1028)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSPErrores, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jSPEditor))))
+                    .addComponent(jSeparator1)
+                    .addComponent(jSPErrores, javax.swing.GroupLayout.DEFAULT_SIZE, 1268, Short.MAX_VALUE)
+                    .addComponent(jSPEditor, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSPEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSPEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSPErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 6, Short.MAX_VALUE))
+                .addComponent(jSPErrores, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -277,6 +283,16 @@ public class PrincipalView extends javax.swing.JFrame {
     public void setjTAError(JTextArea jTAError) {
         this.jTAError = jTAError;
     }
+
+    public JTable getjTReporte() {
+        return jTReporte;
+    }
+
+    public void setjTReporte(JTable jTReporte) {
+        this.jTReporte = jTReporte;
+    }
+    
+    
     
     
 
@@ -295,6 +311,6 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jSPErrores;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextArea jTAEditor;
-    private javax.swing.JTextArea jTAError;
+    private javax.swing.JTable jTReporte;
     // End of variables declaration//GEN-END:variables
 }
