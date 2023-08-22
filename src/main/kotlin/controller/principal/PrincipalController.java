@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class PrincipalController implements ActionListener {
     private PrincipalView principalView;
     private ArrayList<Token> tokens = new ArrayList<>();
+    private  DefaultTableModel model;
 
     public PrincipalController(PrincipalView principalView) {
         this.principalView = principalView;
@@ -23,8 +24,15 @@ public class PrincipalController implements ActionListener {
         principalView.getjMIGuardar().addActionListener(this);
         principalView.getjMIGuardarComo().addActionListener(this);
         principalView.getjMIAnalizar().addActionListener(this);
-        principalView.getjMIReportes().addActionListener(this);
         principalView.getjMIGraficos().addActionListener(this);
+
+        model = new DefaultTableModel();
+        model.addColumn("Token");
+        model.addColumn("Patrón");
+        model.addColumn("Lexema");
+        model.addColumn("Fila");
+        model.addColumn("Columna");
+        principalView.getjTReporte().setModel(model);
     }
 
     public void iniciar() {
@@ -53,19 +61,13 @@ public class PrincipalController implements ActionListener {
             System.out.println("A ver que sale");
 
             //codigo chatgpt
-            DefaultTableModel model = new DefaultTableModel();
-            model.addColumn("Token");
-            model.addColumn("Patrón");
-            model.addColumn("Lexema");
-            model.addColumn("Fila");
-            model.addColumn("Columna");
+
 
             for (Token tk : tokens) {
                 model.addRow(new Object[]{tk.getTipoDeToken().toString(), tk.getPatron(), tk.getToken(), tk.getFila(), tk.getColumna()});
             }
-            principalView.getjTReporte().setModel(model);
+
         }
-        if (e.getSource() == principalView.getjMIReportes()) {}
         if (e.getSource() == principalView.getjMIGraficos()) {}
     }
 }

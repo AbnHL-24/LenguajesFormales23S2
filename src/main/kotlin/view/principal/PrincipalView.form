@@ -41,11 +41,6 @@
                 <Property name="text" type="java.lang.String" value="Analizar"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMIReportes">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Reportes"/>
-              </Properties>
-            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMIGraficos">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Graficos"/>

@@ -47,7 +47,6 @@ public class PrincipalView extends javax.swing.JFrame {
         jMIGuardarComo = new javax.swing.JMenuItem();
         jMOpciones = new javax.swing.JMenu();
         jMIAnalizar = new javax.swing.JMenuItem();
-        jMIReportes = new javax.swing.JMenuItem();
         jMIGraficos = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -90,9 +89,6 @@ public class PrincipalView extends javax.swing.JFrame {
 
         jMIAnalizar.setText("Analizar");
         jMOpciones.add(jMIAnalizar);
-
-        jMIReportes.setText("Reportes");
-        jMOpciones.add(jMIReportes);
 
         jMIGraficos.setText("Graficos");
         jMOpciones.add(jMIGraficos);
@@ -220,14 +216,6 @@ public class PrincipalView extends javax.swing.JFrame {
         this.jMINuevo = jMINuevo;
     }
 
-    public JMenuItem getjMIReportes() {
-        return jMIReportes;
-    }
-
-    public void setjMIReportes(JMenuItem jMIReportes) {
-        this.jMIReportes = jMIReportes;
-    }
-
     public JMenu getjMOpciones() {
         return jMOpciones;
     }
@@ -296,7 +284,6 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMIGuardar;
     private javax.swing.JMenuItem jMIGuardarComo;
     private javax.swing.JMenuItem jMINuevo;
-    private javax.swing.JMenuItem jMIReportes;
     private javax.swing.JMenu jMOpciones;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jSPEditor;
