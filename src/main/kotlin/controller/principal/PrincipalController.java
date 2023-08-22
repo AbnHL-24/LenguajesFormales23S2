@@ -60,9 +60,6 @@ public class PrincipalController implements ActionListener {
             }
             System.out.println("A ver que sale");
 
-            //codigo chatgpt
-
-
             for (Token tk : tokens) {
                 model.addRow(new Object[]{tk.getTipoDeToken().toString(), tk.getPatron(), tk.getToken(), tk.getFila(), tk.getColumna()});
             }
